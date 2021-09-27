@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kakao_profile/src/components/text_deitor_widget.dart';
 import 'package:kakao_profile/src/controller/profile_controller.dart';
 
 class Profile extends GetView<ProfileController> {
@@ -232,14 +233,30 @@ class Profile extends GetView<ProfileController> {
 
   Widget _editProfileInfo() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        children: [
-          _partProfileInfo('개발하는남자 ', () {}),
-          _partProfileInfo('구독과 좋아요~! 부탁드립니다. ', () {}),
-        ],
-      ),
-    );
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Obx(
+          () => Column(
+            children: [
+              _partProfileInfo(controller.myProfile.value.name, () async {
+                String value = await Get.dialog(TextEditorWidget(
+                  text: controller.myProfile.value.name,
+                ));
+                if (value != null) {
+                  controller.updateName(value);
+                }
+              }),
+              _partProfileInfo(controller.myProfile.value.discription!,
+                  () async {
+                String value = await Get.dialog(TextEditorWidget(
+                  text: controller.myProfile.value.discription!,
+                ));
+                if (value != null) {
+                  controller.updateDiscription(value);
+                }
+              }),
+            ],
+          ),
+        ));
   }
 
   Widget _myProfile() {
@@ -266,6 +283,7 @@ class Profile extends GetView<ProfileController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xff3f3f3f),
+      resizeToAvoidBottomInset: false,
       body: Container(
         child: Stack(
           children: [
