@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kakao_profile/src/components/text_deitor_widget.dart';
+import 'package:kakao_profile/src/controller/image_crop_controller.dart';
 import 'package:kakao_profile/src/controller/profile_controller.dart';
 
 class Profile extends GetView<ProfileController> {
@@ -11,45 +14,59 @@ class Profile extends GetView<ProfileController> {
         top: Get.mediaQuery.padding.top,
         left: 0,
         right: 0,
-        child: Container(
-          padding: const EdgeInsets.all(15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  controller.toggleEditProfile();
-                },
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.arrow_back_ios,
-                      color: Colors.white,
-                      size: 16,
-                    ),
-                    Text(
-                      '프로필 편집',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white,
+        child: Obx(
+          () => Container(
+            padding: const EdgeInsets.all(15),
+            child: controller.isEditMyProfile == true
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: controller.rollback,
+                        child: Row(
+                          children: const [
+                            Icon(
+                              Icons.arrow_back_ios,
+                              color: Colors.white,
+                              size: 16,
+                            ),
+                            Text(
+                              '프로필 편집',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  print('프로필 편집 저장');
-                },
-                child: Text(
-                  '완료',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white,
+                      GestureDetector(
+                        onTap: () {
+                          print('프로필 편집 저장');
+                        },
+                        child: Text(
+                          '완료',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Icon(Icons.close_sharp, color: Colors.white),
+                      Row(
+                        children: [
+                          Icon(Icons.qr_code, color: Colors.white),
+                          SizedBox(width: 10),
+                          Icon(Icons.settings, color: Colors.white)
+                        ],
+                      )
+                    ],
                   ),
-                ),
-              ),
-            ],
           ),
         ));
   }
@@ -122,46 +139,58 @@ class Profile extends GetView<ProfileController> {
   }
 
   Widget _profileImage() {
-    return Container(
-      width: 120,
-      height: 120,
-      child: Stack(
-        children: [
-          Center(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(40),
-              child: Container(
-                width: 100,
-                height: 100,
-                child: Image.network(
-                  'https://i.stack.imgur.com/l60Hf.png',
-                  fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () {
+        if (controller.isEditMyProfile.value) {
+          controller.pickImage();
+        }
+      },
+      child: Container(
+        width: 120,
+        height: 120,
+        child: Stack(
+          children: [
+            Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(40),
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  child: controller.myProfile.value.avatarFile == null
+                      ? Image.network(
+                          'https://i.stack.imgur.com/l60Hf.png',
+                          fit: BoxFit.cover,
+                        )
+                      : Image.file(
+                          controller.myProfile.value.avatarFile!,
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
             ),
-          ),
-          controller.isEditMyProfile.value
-              ? Positioned(
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
-                  child: Container(
-                    alignment: Alignment.bottomRight,
+            controller.isEditMyProfile.value
+                ? Positioned(
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
                     child: Container(
-                      padding: const EdgeInsets.all(7),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
+                      alignment: Alignment.bottomRight,
+                      child: Container(
+                        padding: const EdgeInsets.all(7),
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                        ),
+                        child: Icon(
+                          Icons.camera_alt,
+                          size: 20,
+                        ),
                       ),
-                      child: Icon(
-                        Icons.camera_alt,
-                        size: 20,
-                      ),
-                    ),
-                  ))
-              : Container()
-        ],
+                    ))
+                : Container()
+          ],
+        ),
       ),
     );
   }
@@ -172,7 +201,7 @@ class Profile extends GetView<ProfileController> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 12),
           child: Text(
-            '개발하는남자',
+            controller.myProfile.value.name!,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w400,
@@ -181,7 +210,7 @@ class Profile extends GetView<ProfileController> {
           ),
         ),
         Text(
-          '구독과 좋아요~! 부탁드립니다.',
+          controller.myProfile.value.discription!,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w400,
@@ -237,9 +266,9 @@ class Profile extends GetView<ProfileController> {
         child: Obx(
           () => Column(
             children: [
-              _partProfileInfo(controller.myProfile.value.name, () async {
+              _partProfileInfo(controller.myProfile.value.name!, () async {
                 String value = await Get.dialog(TextEditorWidget(
-                  text: controller.myProfile.value.name,
+                  text: controller.myProfile.value.name!,
                 ));
                 if (value != null) {
                   controller.updateName(value);
