@@ -42,7 +42,7 @@ class Profile extends GetView<ProfileController> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          print('프로필 편집 저장');
+                          controller.save();
                         },
                         child: Text(
                           '완료',
@@ -79,10 +79,20 @@ class Profile extends GetView<ProfileController> {
       left: 0,
       child: GestureDetector(
         onTap: () {
-          print('change my background Image');
+          if (controller.isEditMyProfile == true) {
+            controller.pickImage(ProfileImageType.BACKGROUND);
+          }
         },
-        child: Container(
-          color: Colors.transparent,
+        child: Obx(
+          () => Container(
+            color: Colors.transparent,
+            child: controller.myProfile.value.backgroundFile == null
+                ? Container()
+                : Image.file(
+                    controller.myProfile.value.backgroundFile!,
+                    fit: BoxFit.cover,
+                  ),
+          ),
         ),
       ),
     );
@@ -142,7 +152,7 @@ class Profile extends GetView<ProfileController> {
     return GestureDetector(
       onTap: () {
         if (controller.isEditMyProfile.value) {
-          controller.pickImage();
+          controller.pickImage(ProfileImageType.THUMBNAIL);
         }
       },
       child: Container(
