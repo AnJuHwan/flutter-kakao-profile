@@ -44,7 +44,7 @@ class ProfileController extends GetxController {
   }
 
   void pickImage(ProfileImageType type) async {
-    File? file = await ImageCropController.to.selectImage();
+    File? file = await ImageCropController.to.selectImage(type);
     if (file == null) {
       return;
     }
