@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kakao_profile/src/components/text_deitor_widget.dart';
@@ -11,64 +10,65 @@ class Profile extends GetView<ProfileController> {
 
   Widget _header() {
     return Positioned(
-        top: Get.mediaQuery.padding.top,
-        left: 0,
-        right: 0,
-        child: Obx(
-          () => Container(
-            padding: const EdgeInsets.all(15),
-            child: controller.isEditMyProfile == true
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: controller.rollback,
-                        child: Row(
-                          children: const [
-                            Icon(
-                              Icons.arrow_back_ios,
-                              color: Colors.white,
-                              size: 16,
-                            ),
-                            Text(
-                              '프로필 편집',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          controller.save();
-                        },
-                        child: Text(
-                          '완료',
-                          style: TextStyle(
-                            fontSize: 14,
+      top: Get.mediaQuery.padding.top,
+      left: 0,
+      right: 0,
+      child: Obx(
+        () => Container(
+          padding: const EdgeInsets.all(15),
+          child: controller.isEditMyProfile == true
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: controller.rollback,
+                      child: Row(
+                        children: const [
+                          Icon(
+                            Icons.arrow_back_ios,
                             color: Colors.white,
+                            size: 16,
                           ),
+                          Text(
+                            '프로필 편집',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        controller.save();
+                      },
+                      child: Text(
+                        '완료',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
                         ),
                       ),
-                    ],
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Icon(Icons.close_sharp, color: Colors.white),
-                      Row(
-                        children: [
-                          Icon(Icons.qr_code, color: Colors.white),
-                          SizedBox(width: 10),
-                          Icon(Icons.settings, color: Colors.white)
-                        ],
-                      )
-                    ],
-                  ),
-          ),
-        ));
+                    ),
+                  ],
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(Icons.close_sharp, color: Colors.white),
+                    Row(
+                      children: [
+                        Icon(Icons.qr_code, color: Colors.white),
+                        SizedBox(width: 10),
+                        Icon(Icons.settings, color: Colors.white)
+                      ],
+                    )
+                  ],
+                ),
+        ),
+      ),
+    );
   }
 
   Widget _backgroundImage() {
