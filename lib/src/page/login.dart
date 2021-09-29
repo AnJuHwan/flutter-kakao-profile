@@ -27,14 +27,14 @@ class LoginWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Google Login'),
+        title: const Text('Google Login'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextButton(
-              child: Text(
+              child: const Text(
                 'google login',
                 style: TextStyle(color: Colors.black),
               ),

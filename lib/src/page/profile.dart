@@ -43,7 +43,7 @@ class Profile extends GetView<ProfileController> {
                       onTap: () {
                         controller.save();
                       },
-                      child: Text(
+                      child: const Text(
                         '완료',
                         style: TextStyle(
                           fontSize: 14,
@@ -56,9 +56,9 @@ class Profile extends GetView<ProfileController> {
               : Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(Icons.close_sharp, color: Colors.white),
+                    const Icon(Icons.close_sharp, color: Colors.white),
                     Row(
-                      children: [
+                      children: const [
                         Icon(Icons.qr_code, color: Colors.white),
                         SizedBox(width: 10),
                         Icon(Icons.settings, color: Colors.white)

@@ -11,14 +11,14 @@ class App extends StatelessWidget {
       future: Firebase.initializeApp(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Center(
+          return const Center(
             child: Text('Firebase load fail'),
           );
         }
         if (snapshot.connectionState == ConnectionState.done) {
-          return Home();
+          return const Home();
         }
-        return Center(
+        return const Center(
           child: CircularProgressIndicator(),
         );
       },

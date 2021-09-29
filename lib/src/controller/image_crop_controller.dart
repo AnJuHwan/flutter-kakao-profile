@@ -18,6 +18,7 @@ class ImageCropController extends GetxController {
     try {
       return _cropImage(image, type);
     } catch (e) {
+      // ignore: avoid_print
       print(e);
     }
   }

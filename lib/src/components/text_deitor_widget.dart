@@ -14,7 +14,6 @@ class _TextEditorWidgetState extends State<TextEditorWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _textEditingController = TextEditingController();
     _textEditingController!.text = widget.text;
@@ -29,7 +28,7 @@ class _TextEditorWidgetState extends State<TextEditorWidget> {
           GestureDetector(
             onTap: () {},
             child: Row(
-              children: [
+              children: const [
                 Icon(
                   Icons.arrow_back_ios,
                   color: Colors.white,
@@ -49,7 +48,7 @@ class _TextEditorWidgetState extends State<TextEditorWidget> {
             onTap: () {
               Get.back(result: _textEditingController!.text);
             },
-            child: Text(
+            child: const Text(
               '완료',
               style: TextStyle(
                 fontSize: 14,
@@ -65,13 +64,13 @@ class _TextEditorWidgetState extends State<TextEditorWidget> {
   Widget _editTextField() {
     return Center(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: TextField(
           controller: _textEditingController,
           maxLength: 20,
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 18, color: Colors.white),
-          decoration: InputDecoration(
+          style: const TextStyle(fontSize: 18, color: Colors.white),
+          decoration: const InputDecoration(
             hintText: "",
             hintStyle: TextStyle(fontSize: 18, color: Colors.white),
             counterStyle: TextStyle(fontSize: 14, color: Colors.white),
