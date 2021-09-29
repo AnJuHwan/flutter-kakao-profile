@@ -6,7 +6,7 @@ class FirebaseUserRepository {
   static Future<String?> signup(UserModel user) async {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
     DocumentReference drf = await users.add(user.toMap());
-    // 키값인 도큐먼트 아이디로 업데이트
+    // 키값인 DocumentReference 아이디로 업데이트
     return drf.id;
   }
 
@@ -23,5 +23,10 @@ class FirebaseUserRepository {
   static updateLastLoginDate(String? docId, DateTime time) {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
     users.doc(docId).update({"date_last_login": time});
+  }
+
+  static updateData(String? docId, UserModel user) {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    users.doc(docId).update(user.toMap());
   }
 }

@@ -148,6 +148,27 @@ class Profile extends GetView<ProfileController> {
           ));
   }
 
+  Widget _editProfileImageWidget() {
+    return controller.myProfile.value.avatarFile == null
+        ? _profileImageWidget()
+        : Image.file(
+            File(controller.myProfile.value.avatarFile!.path),
+            fit: BoxFit.cover,
+          );
+  }
+
+  Widget _profileImageWidget() {
+    return controller.myProfile.value.avatarUrl == null
+        ? Image.network(
+            'https://i.stack.imgur.com/l60Hf.png',
+            fit: BoxFit.cover,
+          )
+        : Image.network(
+            '${controller.myProfile.value.avatarUrl}',
+            fit: BoxFit.cover,
+          );
+  }
+
   Widget _profileImage() {
     return GestureDetector(
       onTap: () {
@@ -166,15 +187,9 @@ class Profile extends GetView<ProfileController> {
                 child: Container(
                   width: 100,
                   height: 100,
-                  child: controller.myProfile.value.avatarFile == null
-                      ? Image.network(
-                          'https://i.stack.imgur.com/l60Hf.png',
-                          fit: BoxFit.cover,
-                        )
-                      : Image.file(
-                          controller.myProfile.value.avatarFile!,
-                          fit: BoxFit.cover,
-                        ),
+                  child: controller.isEditMyProfile.value
+                      ? _editProfileImageWidget()
+                      : _profileImageWidget(),
                 ),
               ),
             ),

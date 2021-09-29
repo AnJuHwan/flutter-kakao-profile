@@ -72,7 +72,7 @@ class _TextEditorWidgetState extends State<TextEditorWidget> {
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 18, color: Colors.white),
           decoration: InputDecoration(
-            hintText: "개발하는남자",
+            hintText: "",
             hintStyle: TextStyle(fontSize: 18, color: Colors.white),
             counterStyle: TextStyle(fontSize: 14, color: Colors.white),
             enabledBorder: UnderlineInputBorder(

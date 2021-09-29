@@ -92,6 +92,7 @@ class ProfileController extends GetxController {
 
   void save() {
     originMyProfile = myProfile.value;
+    FirebaseUserRepository.updateData(originMyProfile.docId, originMyProfile);
     toggleEditProfile();
   }
 }
