@@ -25,6 +25,11 @@ class FirebaseUserRepository {
     users.doc(docId).update({"date_last_login": time});
   }
 
+  static updateImageUrl(String? docId, String url, String fieldName) {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    users.doc(docId).update({fieldName: url});
+  }
+
   static updateData(String? docId, UserModel user) {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
     users.doc(docId).update(user.toMap());

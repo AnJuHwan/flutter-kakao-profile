@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:kakao_profile/src/controller/image_crop_controller.dart';
 import 'package:kakao_profile/src/model/user_model.dart';
 import 'package:kakao_profile/src/repository/firebase_user_repository.dart';
+import 'package:kakao_profile/src/repository/firestorage_repository.dart';
 
 enum ProfileImageType { THUMBNAIL, BACKGROUND }
 
@@ -12,6 +14,7 @@ class ProfileController extends GetxController {
   RxBool isEditMyProfile = false.obs;
   UserModel originMyProfile = UserModel();
   Rx<UserModel> myProfile = UserModel().obs;
+  FirestorageRepository _firstorageRepository = FirestorageRepository();
 
   Future<void> authStateChanges(User? firebaseUser) async {
     if (firebaseUser != null) {
@@ -90,8 +93,31 @@ class ProfileController extends GetxController {
     }
   }
 
+  void _updateProfileImageUrl(String downloadUrl) {
+    originMyProfile.avatarUrl = downloadUrl;
+    myProfile.update((user) {
+      user!.avatarUrl = downloadUrl;
+    });
+  }
+
   void save() {
     originMyProfile = myProfile.value;
+
+    if (originMyProfile.avatarFile != null) {
+      Future<UploadTask> task = _firstorageRepository.uploadImageFile(
+          originMyProfile.uid, "profile", originMyProfile.avatarFile);
+      task.asStream().listen((event) {
+        event.snapshotEvents.listen((event) async {
+          if (event.bytesTransferred == event.totalBytes) {
+            String downloadUrl = await event.ref.getDownloadURL();
+            _updateProfileImageUrl(downloadUrl);
+            FirebaseUserRepository.updateImageUrl(
+                originMyProfile.docId, downloadUrl, "avatar_url");
+          }
+        });
+      });
+    }
+
     FirebaseUserRepository.updateData(originMyProfile.docId, originMyProfile);
     toggleEditProfile();
   }
