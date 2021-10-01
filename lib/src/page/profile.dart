@@ -84,18 +84,36 @@ class Profile extends GetView<ProfileController> {
           }
         },
         child: Obx(
-          () => Container(
-            color: Colors.transparent,
-            child: controller.myProfile.value.backgroundFile == null
-                ? Container()
-                : Image.file(
-                    controller.myProfile.value.backgroundFile!,
-                    fit: BoxFit.cover,
-                  ),
+          () => Opacity(
+            opacity: 0.5,
+            child: Container(
+              color: Colors.transparent,
+              child: controller.isEditMyProfile.value
+                  ? _editBackgroundImageWidget()
+                  : _backgroundImageWidget(),
+            ),
           ),
         ),
       ),
     );
+  }
+
+  Widget _editBackgroundImageWidget() {
+    return controller.myProfile.value.backgroundFile == null
+        ? _backgroundImageWidget()
+        : Image.file(
+            File(controller.myProfile.value.backgroundFile!.path),
+            fit: BoxFit.cover,
+          );
+  }
+
+  Widget _backgroundImageWidget() {
+    return controller.myProfile.value.backgroundUrl == null
+        ? Container()
+        : Image.network(
+            '${controller.myProfile.value.backgroundUrl}',
+            fit: BoxFit.cover,
+          );
   }
 
   Widget _oneButton(IconData icon, String title, Function() ontap) {
@@ -336,7 +354,7 @@ class Profile extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xff3f3f3f),
+      backgroundColor: Colors.black,
       resizeToAvoidBottomInset: false,
       body: Container(
         child: Stack(

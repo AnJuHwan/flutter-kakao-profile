@@ -47,7 +47,7 @@ class UserModel {
         name = json['name'] as String,
         discription = json['discription'] as String,
         avatarUrl = json['avatar_url'] as String,
-        backgroundUrl = json['background_url'] as String?,
+        backgroundUrl = json['background_url'] as String,
         lastLoginTime = json['last_login_time'].toDate(),
         createdTime = json['created_time'].toDate();
 

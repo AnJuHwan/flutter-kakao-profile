@@ -100,6 +100,13 @@ class ProfileController extends GetxController {
     });
   }
 
+  void _updateBackgroundImageUrl(String downloadUrl) {
+    originMyProfile.backgroundUrl = downloadUrl;
+    myProfile.update((user) {
+      user!.backgroundUrl = downloadUrl;
+    });
+  }
+
   void save() {
     originMyProfile = myProfile.value;
 
@@ -113,6 +120,21 @@ class ProfileController extends GetxController {
             _updateProfileImageUrl(downloadUrl);
             FirebaseUserRepository.updateImageUrl(
                 originMyProfile.docId, downloadUrl, "avatar_url");
+          }
+        });
+      });
+    }
+
+    if (originMyProfile.backgroundFile != null) {
+      Future<UploadTask> task = _firstorageRepository.uploadImageFile(
+          originMyProfile.uid, "background", originMyProfile.backgroundFile);
+      task.asStream().listen((event) {
+        event.snapshotEvents.listen((event) async {
+          if (event.bytesTransferred == event.totalBytes) {
+            String downloadUrl = await event.ref.getDownloadURL();
+            _updateBackgroundImageUrl(downloadUrl);
+            FirebaseUserRepository.updateImageUrl(
+                originMyProfile.docId, downloadUrl, "background_url");
           }
         });
       });
